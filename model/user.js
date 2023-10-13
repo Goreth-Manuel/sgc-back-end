@@ -17,13 +17,4 @@ const User = sequelize.define('user', {
 
 });
 
-(async () => {
-    try {
-        await User.sync();
-        console.log('Tabela usuario criado');
-    } catch (error) {
-        console.error('Error ao criar as tabelas', error);
-    }
-})();
-
 module.exports = User
