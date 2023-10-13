@@ -9,7 +9,7 @@ const app = express();
 // middleware é uma instrução que é executada antes de executar a rota
 app.use(express.json());
 
-//Criar o middleware para permitir requisição externa
+// Criar o middleware para permitir requisição externa
 app.use((req, res, next) => {
     // Qualquer endereço pode fazerrequisição
     res.header("Access-Control-Allow-Origin", "*");
@@ -21,18 +21,16 @@ app.use((req, res, next) => {
     app.use(cors());
     // Quando não houver erro deve continuar o processamento
     next();
-
 })
-//testar a conexão com o BD
-//const db = require("./db/models");
 
-// incluir os CONTRLLERS
-const usuarios = require('./controllers/usuarios')
-const login = require('./controllers/login')
 
-//criar as rotas
-app.use('/', usuarios);
-app.use('/', login);
+//Controllers
+const AuthRoute = require('./controllers/authentication')
+const userRoutes = require('./controllers/user');
+const { verifyToken } = require('./middlewares/auth');
+//Routes
+app.use(AuthRoute);
+app.use('/', verifyToken, userRoutes);
 
 app.listen(8080, () => {
     console.log('Servidor rodando na porta 8080')
