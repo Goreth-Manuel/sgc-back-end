@@ -26,14 +26,13 @@ app.use((req, res, next) => {
 //const db = require("./db/models");
 
 // incluir os CONTRLLERS
-const usuarios = require("./controllers/usuarios");
-const login = require("./controllers/login");
-const register = require("./controllers/register");
+const users = require("./controllers/users");
+
+const authentication = require("./controllers/authentication");
 
 //criar as rotas
-app.use("/", usuarios);
-app.use("/", login);
-app.use("/", register);
+app.use("/auth", authentication);
+app.use("/", users);
 
 app.listen(8080, () => {
   console.log("Servidor rodando na porta 8080");
