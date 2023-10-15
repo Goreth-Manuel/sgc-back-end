@@ -9,7 +9,6 @@ const db = require('./../db/models');
 const yup = require('yup')
 //criar rota listar
 router.get('/usuarios', async (req, res) => {
-
     //Receber o número da página, quando não é enviado o número da página é atribuido 
     // a página 1
     const { page } = req.query;
