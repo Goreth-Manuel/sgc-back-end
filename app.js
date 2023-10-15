@@ -11,7 +11,7 @@ app.use(express.json());
 
 //Criar o middleware para permitir requisição externa
 app.use((req, res, next) => {
-  // Qualquer endereço pode fazerrequisição
+  // Qualquer endereço pode fazer requisição
   res.header("Access-Control-Allow-Origin", "*");
   // Tipos dr métodos que a API aceita
   res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
