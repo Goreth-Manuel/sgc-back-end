@@ -1,8 +1,6 @@
-//Incluir as bibliotecas
 const express = require("express");
-
 const cors = require("cors"); // Importar a bibliotece para permitir conexão externa
-//chamar a função express
+
 const app = express();
 
 //Criar o middleware para receber os dados no corpo da requisição
@@ -22,12 +20,11 @@ app.use((req, res, next) => {
   // Quando não houver erro deve continuar o processamento
   next();
 });
-//testar a conexão com o BD
-//const db = require("./db/models");
+// testar a conexão com o BD
+// const db = require("./db/models");
 
 // incluir os CONTRLLERS
 const users = require("./controllers/users");
-
 const authentication = require("./controllers/authentication");
 
 //criar as rotas
