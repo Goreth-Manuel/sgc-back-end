@@ -1,5 +1,5 @@
 const { verify } = require("jsonwebtoken");
-const dotenv = require("dotenv/config.js");
+require("dotenv/config.js");
 
 module.exports = {
   async authUsuario(req, res, next) {
