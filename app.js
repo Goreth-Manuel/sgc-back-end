@@ -39,6 +39,6 @@ app.use("/auth", authentication);
 app.use("/", users);
 
 
-app.listen(8080, () => {
-  console.log("Servidor rodando na porta 8080");
+app.listen(4000, () => {
+  console.log("Servidor rodando na porta 4000");
 });
