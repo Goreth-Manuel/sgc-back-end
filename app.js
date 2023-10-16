@@ -9,7 +9,6 @@ app.use(express.json());
 
 //Criar o middleware para permitir requisição externa
 app.use((req, res, next) => {
-
   // Qualquer endereço pode fazerrequisição
   //res.header("Access-Control-Allow-Origin", "*");
 
@@ -19,12 +18,14 @@ app.use((req, res, next) => {
   //Permitir o envio de dados para API
   res.header("Access-Control-Allow-Headers", "Content-Type");
   // Executar o cors
- 
-  app.use(cors({
-    origin: '*'
-  }));
+
+  app.use(
+    cors({
+      origin: "*",
+    })
+  );
   // Quando não houver erro deve continuar o processamento
-  
+
   next();
 });
 // testar a conexão com o BD
@@ -37,7 +38,6 @@ const authentication = require("./controllers/authentication");
 //criar as rotas
 app.use("/auth", authentication);
 app.use("/", users);
-
 
 app.listen(8080, () => {
   console.log("Servidor rodando na porta 8080");

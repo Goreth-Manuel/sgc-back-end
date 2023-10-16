@@ -94,24 +94,20 @@ router.post("/login", async (req, res) => {
   });
 
   try {
-    await schema.validate(req.body);
-  } catch (error) {
-    return res.status(400).json({
-      error: true,
-      message: error.errors, // Corrigido para error.errors
-    });
-  }
+    const isValid = await schema.validate(req.body);
+    if (!isValid)
+      return res.status(400).json({
+        error: true,
+        message: error.errors,
+      });
 
-  try {
     const { email, senha } = req.body;
     const usuario = await User.findOne({
       where: { email },
     });
 
     if (!usuario) {
-      return res
-        .status(400)
-        .json({ message: "Não existe nenhum usuário com este email" });
+      return res.status(404).json({ message: "Usuário não encontrado.!" });
     }
 
     const senhaUsuario = await compare(senha, usuario.senha);
@@ -125,8 +121,10 @@ router.post("/login", async (req, res) => {
     });
 
     return res.json({ auth: true, token: token });
-  } catch (error) {
-    res.json(error);
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ message: "internal server error", error: err });
   }
 });
 
