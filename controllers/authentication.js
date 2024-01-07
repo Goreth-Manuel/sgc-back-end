@@ -4,7 +4,7 @@ const router = express.Router();
 const { hash } = require("bcryptjs");
 const { sign } = require("jsonwebtoken");
 const { Sequelize } = require("sequelize");
-const initUsuarioModel = require("../models/user");
+const initUsuarioModel = require("../db/models/user");
 const { verify } = require("jsonwebtoken");
 const config = require("../db/config/config");
 const yup = require("yup");
@@ -35,6 +35,9 @@ router.post("/register", async (req, res) => {
       .string()
       .email("Insira o seu email")
       .required("Insira o seu email"),
+    perfil: yup
+    .string()
+    .nullable()
   });
 
   try {
@@ -47,7 +50,7 @@ router.post("/register", async (req, res) => {
   }
 
   try {
-    const { nome, email, senha } = req.body;
+    const { nome, email, senha, perfil } = req.body;
 
     // Verifique se o email já está em uso
     const existingUser = await User.findOne({
@@ -63,9 +66,10 @@ router.post("/register", async (req, res) => {
 
     // Crie um novo usuário
     const newUser = await User.create({
-      name: nome,
+      nome,
       email,
       senha: hashedSenha,
+      perfil,
       // Outros campos de usuário, se houverem
     });
 
@@ -74,10 +78,10 @@ router.post("/register", async (req, res) => {
       expiresIn: 3600, // Tempo de expiração do token em segundos
     });
 
-    res.json({ auth: true, token: token });
+    res.json({ newUser, auth: true, token });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Erro no registro" });
+    res.status(500).json({ error: error});
   }
 });
 
@@ -94,39 +98,38 @@ router.post("/login", async (req, res) => {
   });
 
   try {
-    await schema.validate(req.body);
-  } catch (error) {
-    return res.status(400).json({
-      error: true,
-      message: error.errors, // Corrigido para error.errors
-    });
-  }
+    const isValid = await schema.validate(req.body);
+    if (!isValid)
+      return res.status(400).json({
+        error: true,
+        message: error.errors,
+      });
 
-  try {
     const { email, senha } = req.body;
     const usuario = await User.findOne({
       where: { email },
     });
 
     if (!usuario) {
-      return res
-        .status(400)
-        .json({ message: "Não existe nenhum usuário com este email" });
+      return res.status(404).json({ message: "Usuário não encontrado.!" });
     }
 
-    const senhaUsuario = await compare(senha, usuario.senha);
+    const senhaUsuario = await compare(senha, usuario.senha.toString());
 
     if (!senhaUsuario) {
-      return res.status(400).json.send({ error: "Senha incorrecta" });
+      return res.status(400).json({ error: "Senha incorrecta" });
     }
 
     const token = sign({ id: usuario.id }, process.env.SECRET_JWT, {
       expiresIn: 3600,
     });
 
-    return res.json({ auth: true, token: token });
-  } catch (error) {
-    res.json(error);
+    return res.json({ auth: true, token, username: usuario.nome });
+  } catch (err) {
+    console.log(err)
+    return res
+      .status(500)
+      .json({ message: "internal server error", error: err });
   }
 });
 

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Sequelize } = require("sequelize");
-const initUsuarioModel = require("../models/user");
+const initUsuarioModel = require("../db/models/user");
 const config = require("../db/config/config");
 
 const environment = process.env.NODE_ENV || "development";
@@ -33,7 +33,7 @@ router.get("/users", async (req, res) => {
     attributes: ["id", "name", "email", "updatedAt"],
   });
 
-  if (usuario) {
+  if (usuario) { 
     return res.json({
       usuario,
     });
