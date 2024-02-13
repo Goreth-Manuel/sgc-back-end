@@ -43,7 +43,6 @@ app.use("/", users);
 app.use("/", inscricao);
 app.use("/", matricula);
 
-
 app.listen(8080, () => {
   console.log("Servidor rodando na porta 8080");
 });

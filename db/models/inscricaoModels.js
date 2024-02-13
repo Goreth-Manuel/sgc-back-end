@@ -22,6 +22,7 @@ module.exports = (sequelize) => {
       BIDaMae: DataTypes.STRING,
       cedulaDeNascimentoDaCrianca: DataTypes.STRING,
       declaracaoTrabalho: DataTypes.STRING,
+      estado: DataTypes.BOOLEAN,
     },
     {
       sequelize,

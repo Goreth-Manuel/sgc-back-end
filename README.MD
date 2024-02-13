@@ -29,3 +29,7 @@ Instalar a dependência para JWT
 
 Instalar o cors que permite fazer a requisição externa
 ### npm install cors
+
+### npx sequelize-cli db:migrate:undo:all
+
+### npx sequelize-cli db:migrate:undo 

@@ -64,17 +64,17 @@ router.post(
         req.files["fotografiaCrianca"] &&
         req.files["fotografiaCrianca"].length > 0 
       ) {
-        const newInscricao = await Matricula.create({
+        const newMatricula = await Matricula.create({
           moradaCrianca: req.body.moradaCrianca,
           inscricaoID: req.body.inscricaoID,
-          possuiNecessidadeEspecial: req.body.possuiNecessidadeEspecial,
+          moradaCrianca: req.body.moradaCrianca,
           comprovativoPagamento: req.files["comprovativoPagamento"][0].path,
           fotografiaCrianca: req.files["fotografiaCrianca"][0].path,
           
           // Outros campos de usuário, se houverem
         });
 
-        res.status(200).json({ newInscricao });
+        res.status(200).json({ newMatricula });
       } else {
         res
           .status(400)
@@ -210,6 +210,30 @@ router.delete("/matricula/:id", async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(400).json({ mensagem: "Erro: Inscrição não apagada" });
+  }
+});
+
+// rota estado
+router.put("/actualizar_matricula/:id", async (req, res) => {
+  try {
+    // Receba o ID da inscrição e o novo estado da URL e do corpo da requisição
+    const { id } = req.params;
+    const { estado } = req.body; // Adicione outros campos aqui se necessário
+
+    // Verifique se a inscrição com o ID especificado existe
+    const existingMatricula = await Matricula.findByPk(id);
+
+    if (!existingMatricula) {
+      return res.status(404).json({ mensagem: "Matricula não encontrada" });
+    }
+
+    // Atualize o estado da inscrição no banco de dados
+    await existingMatricula.update({ estado: estado }); // Atualize outros campos aqui se necessário
+
+    return res.json({ mensagem: "Estado da Matricula atualizado com sucesso" });
+  } catch (error) {
+    console.error(error);
+    return res.status(400).json({ mensagem: "Erro ao atualizar o estado da Matricula" });
   }
 });
 

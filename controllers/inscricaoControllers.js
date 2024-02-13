@@ -111,13 +111,15 @@ router.post(
           genero: req.body.genero,
           idade: req.body.idade,
           telefone: req.body.telefone,
-          descricaoDaNecessidadeEspecial: req.body.descricaoDaNecessidadeEspecial,
+          descricaoDaNecessidadeEspecial:
+            req.body.descricaoDaNecessidadeEspecial,
           possuiNecessidadeEspecial: req.body.possuiNecessidadeEspecial,
           BIDoPai: req.files["BIDoPai"][0].path,
           BIDaMae: req.files["BIDaMae"][0].path,
           cedulaDeNascimentoDaCrianca:
             req.files["cedulaDeNascimentoDaCrianca"][0].path,
           declaracaoTrabalho: req.files["declaracaoTrabalho"][0].path,
+          estado: false,
           // Outros campos de usuário, se houverem
         });
 
@@ -160,6 +162,7 @@ router.get("/inscricao", async (req, res) => {
       "BIDaMae",
       "cedulaDeNascimentoDaCrianca",
       "declaracaoTrabalho",
+      "estado",
       "createdAt",
       "updatedAt",
     ],
@@ -190,7 +193,7 @@ router.get("/inscricao/:id", async (req, res) => {
   }
 
   //Recuperar o registo do banco de dados
-  const inscricao = await Inscricão.findOne({
+  const inscricao = await Inscricao.findOne({
     // Indicar quais colunas recuperar
     attributes: [
       "id",
@@ -207,6 +210,7 @@ router.get("/inscricao/:id", async (req, res) => {
       "BIDaMae",
       "cedulaDeNascimentoDaCrianca",
       "declaracaoTrabalho",
+      "estado",
       "createdAt",
       "updatedAt",
     ],
@@ -228,6 +232,7 @@ router.get("/inscricao/:id", async (req, res) => {
     });
   }
 });
+
 
 // Rota de edição
 router.put("/inscricao/:id", async (req, res) => {
@@ -276,7 +281,33 @@ router.delete("/inscricao/:id", async (req, res) => {
     console.error(error);
     return res.status(400).json({ mensagem: "Erro: Inscrição não apagada" });
   }
+
+  
 });
 
+
+// rota estado
+router.put("/actualizar_inscricao/:id", async (req, res) => {
+  try {
+    // Receba o ID da inscrição e o novo estado da URL e do corpo da requisição
+    const { id } = req.params;
+    const { estado } = req.body; // Adicione outros campos aqui se necessário
+
+    // Verifique se a inscrição com o ID especificado existe
+    const existingInscricao = await Inscricao.findByPk(id);
+
+    if (!existingInscricao) {
+      return res.status(404).json({ mensagem: "Inscrição não encontrada" });
+    }
+
+    // Atualize o estado da inscrição no banco de dados
+    await existingInscricao.update({ estado: estado }); // Atualize outros campos aqui se necessário
+
+    return res.json({ mensagem: "Estado da inscrição atualizado com sucesso" });
+  } catch (error) {
+    console.error(error);
+    return res.status(400).json({ mensagem: "Erro ao atualizar o estado da inscrição" });
+  }
+});
 // Exportar a instrução que está dentro da costante router
 module.exports = router;
