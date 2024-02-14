@@ -244,16 +244,16 @@ router.put("/inscricao/:id", async (req, res) => {
     const inscricaoId = req.params.id;
 
     // Verifique se o usuário com o ID especificado existe
-    const existingInscricao = await Usuario.findByPk(inscricaoId);
+    const existingInscricao = await Inscricao.findByPk(inscricaoId);
 
     if (!existingInscricao) {
-      return res.status(404).json({ mensagem: "Usuário não encontrado" });
+      return res.status(404).json({ mensagem: "Inscrição não encontrada" });
     }
 
     // Atualize os dados no banco de dados
     await Inscricao.update(dados, { where: { id: inscricaoId } });
 
-    return res.json({ mensagem: "Inscrição editada com sucesso!" });
+    return res.status(200).json({ mensagem: "Inscrição editada com sucesso!" });
   } catch (error) {
     console.error(error);
     return res.status(400).json({ mensagem: "Erro: Inscrição não editada!" });

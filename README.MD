@@ -15,11 +15,14 @@ instalação do mysql2
 
 ### npm install dotenv --save 
 
-Criar a Models usuarios
-### npx sequelize-cli model:generate --name Usuario --attributes name:string, email:string, senha:string
+Criar migration
+### npx sequelize-cli migration:generate --name create-usuarios
 
 Executar as migrations. Trabalhar com migrations permite ter o versionamento do banco de dados
 ### npx sequelize-cli db:migrate
+
+Criar a Models usuarios
+### npx sequelize-cli model:generate --name Usuario --attributes name:string, email:string, senha:string
 
 Instalar o módulo para criptografar a senha
 ### npm install --save bcryptjs
